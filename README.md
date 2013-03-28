@@ -29,7 +29,7 @@ Running the program on this graph
 
 * equivalent examples/abc.gml
 
-outputs the matching in JSON. The source nodes in the graph are numbered 0 - m, the target nodes m+1 - n.
+outputs the clusters in JSON. Each cluster contains the names of the nodes in that cluster.
 
 ```javascript
 {
