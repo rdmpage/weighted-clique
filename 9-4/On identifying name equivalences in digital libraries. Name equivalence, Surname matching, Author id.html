@@ -1,0 +1,897 @@
+<!DOCTYPE html PUBLIC"-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="../IRstyle.css" rel="stylesheet" media="screen" title="serif" />
+<link rel="alternate stylesheet" type="text/css" media="screen" title="sans" href="../IRstylesans.css" />
+<link rev="made" href="mailto:t.d.wilson@shef.ac.uk" />
+
+<title>On identifying name equivalences in digital libraries. Name equivalence, Surname matching, Author identification, Databases</title>
+<meta name="dc.title" content="On Identifying Name Equivalences in Digital Libraries" />
+<meta name="dc.creator" content="Dror G. Feitelson" />
+<meta name="dc.subject" content="Digital library administration" />
+<meta name="dc.description" content="The services provided by digital libraries can be much improved by correctly identifying variants of the same name. For example, this will allow for better retrieval of all the works by a certain author. We focus on variants caused by abbreviations of first names, and show that significant achievements are possible by simple lexical analysis and comparison of names. This is done in two steps: first a pairwise matching of names is performed, and then these are used to find cliques of equivalent names. However, these steps can each be performed in a variety of ways. We therefore conduct an experimental analysis using two real datasets to find which approaches actually work well in practice. Interestingly, this depends on the size of the repository, as larger repositories may have many more similar names." />
+<meta name="dc.title" content="On Identifying Name Equivalences in Digital Libraries" />
+<meta name="dc.subject.keywords" content="Name equivalence, surname matching, author identification" />
+<meta name="dc.subject" content="Digital library administration" />
+<meta name="robots" content="all" />
+<meta name="dc.publisher" content="Professor T.D. Wilson" />
+<meta name="dc.coverage.placename" content="global" />
+<meta name="dc.type" content="text" />
+<meta name="dc.identifier" scheme="ISSN" content="1368-1613" />
+<meta name="dc.relation.IsPartOf" content="http://InformationR.net/ir/9-4/infres94.html" />
+<meta name="dc.format" content="text/html" />
+<meta name="dc.language" content="en" />
+<meta name="dc.rights" content="http://creativecommons.org/licenses/by-nd-nc/1.0/" />
+
+<script language="javascript" type="text/javascript">
+
+		var flag;
+		flag = true;
+		function doChangeFont()
+		{
+			if (flag)
+			{
+			var htmlDoc = document.getElementsByTagName('head').item(0);
+			var css = document.createElement('link');
+			css.setAttribute('rel', 'stylesheet');
+			css.setAttribute('type', 'text/css');
+			css.setAttribute('href', '../sans.css');
+			htmlDoc.appendChild(css);
+			flag = false;
+			} 
+			else
+			{
+			var htmlDoc = document.getElementsByTagName('head').item(0);
+			var css = document.createElement('link');
+			css.setAttribute('rel', 'stylesheet');
+			css.setAttribute('type', 'text/css');
+			css.setAttribute('href', '../IRstyle.css');
+			htmlDoc.appendChild(css);
+			flag = true;
+			}	
+		}
+		
+	</script>
+
+<style type="text/css">
+#button {
+	width: 45em;
+	padding: 0 0 0 0;
+	font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
+	font-size: small;
+	font-weight: bold;  
+	background-color: #ffffff;
+	color: #000000;
+	display: inline;
+	text-align: center;
+	}
+		
+
+#button ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border: none;
+		display: inline;
+		}
+		
+#button li {
+		margin: 0;
+		font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
+	    font-size: small;
+	    font-weight: bold;  
+		background-color: #fff000<!-- #2175bc; -->
+		color: #000000;
+		text-decoration: none;
+		display: inline;
+		}
+
+#button li a:hover {
+		background-color: azure;
+		color: #ff0000;
+		width: auto;
+		}
+
+</style>
+<style type="text/css">
+<!--
+.style1 {color: #FF0000}
+-->
+</style>
+</head>
+<body  bgcolor="#ffffff">
+<table align="center" border="0" cellpadding="0" cellspacing="0">
+<tr><td height="30" align="center" colspan="5"> <img src="../mini_logo2.gif" width="336" height="45" alt="header" /><br />
+Vol. 9  No. 4, July 2004<br /><br /><div id="button">
+<ul>
+	<li><a href="infres94.html">Contents</a> | </li>
+	<li><a href="../iraindex.html">Author index</a> | </li>
+	<li><a href="../irsindex.html">Subject index</a> | </li>
+	<li><a href="../search.html">Search</a> | </li>
+	<li><a href="../index.html">Home</a></li>
+
+</ul>
+</div></td></tr>
+  <tr> 
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<hr size="3" style="color:#000080 ;" />
+
+<h1>On identifying name equivalences in digital libraries</h1>
+
+<h4 align="center"><a href="mailto:feit@cs.huji.ac.il">Dror G. Feitelson</a><br />
+School of Computer Science and Engineering<br />
+The Hebrew University of Jerusalem<br />
+91904 Jerusalem, Israel</h4>
+<br />
+<div align="center">
+<input type="button" value="change font" class="btn" style="font-variant: small-caps; font-weight: bold; font-family: Verdana; color: Blue;" onclick="doChangeFont()" /></div>
+<hr size="1" style="color:#000080 ;" />
+<div align="center"><b>Abstract</b></div>
+
+
+<blockquote>
+The services provided by digital libraries can be much improved by correctly identifying variants of the same name. For example, this will allow for better retrieval of all the works by a certain author. We focus on variants caused by abbreviations of first names, and show that significant achievements are possible by simple lexical analysis and comparison of names. This is done in two steps: first a pairwise matching of names is performed, and then these are
+used to find cliques of equivalent names. However, these steps can each be performed in a variety of ways. We therefore conduct an experimental analysis using two real datasets to find which approaches actually work well in practice. Interestingly, this depends on the size of the repository, as larger repositories may have many more similar names.
+</blockquote>
+ <hr style="COLOR: #000080" size="1" />
+<br />
+ 
+<h2>Introduction</h2>
+
+
+<p>
+People have names. In fact, most have two or three names, and some have four or more. The names serve to identify people; they can be viewed as labels attached to the named individuals.</p>
+
+<p>
+Regrettably, the mapping of names to people is not one-to-one. Several individuals may share the same name. Some individuals change their name during their lifetime, e.g. after getting married and establishing a new family. But the most common problem is the inconsistent use of names. People often do not use all their names, or abbreviate them.
+This leads to a situation where a many-to-many mapping exists from names to people (Figure 1).</p>
+
+<div align="center"><img  width="201" height="138" align="bottom" border="0" src="p192fig1.gif"
+ alt="fig1" /></div><br />
+<div align="center"><strong>Figure 1: Naming is a many-to-many mapping of names to people.</strong>
+</div>
+
+<p>The fact that the mapping is many-to-many rather than one-to-one causes various problems in using digital libraries. For example,</p>
+
+<ul>
+<li>The <a href="http://portal.acm.org/">ACM portal</a> (the digital library of the Association for Computing Machinery, a large professional society of computer scientists) includes the following distinct entries in its author index:
+
+  <blockquote>
+D<small>ROR </small>G<sub>&deg;</sub> F<small>EITELSON</small><br />   
+D<small>ROR </small>F<small>EITELSON</small><br />   
+D<sub>&deg;</sub> G<sub>&deg;</sub> F<small>EITELSON</small><br />   
+D<sub>&deg;</sub> F<small>EITELSON</small>
+</blockquote>
+
+  All of these refer to the same person. If this is a common case, the index is four times larger than it need be, requiring extra browsing and scrolling.
+</li>
+
+<li>Having different names for the same person makes it harder to use the data in the digital library for automatic classification of papers and identifying equivalent entries. Also, data about co-authorship may be misleading rather than helpful.</li>
+
+<li>A side effect of the distinction among the different name variants of the same person is that it is impossible to retrieve all the papers by this individual at once.  Instead, the papers listed under each name have to be retrieved   separately. This is true both when using the author index and when conducting a search. For example, the <a href="http://citeseer.ist.psu.edu/">CiteSeer</a> (a digital library based on the concept of autonomous citation indexing (<a  href="#lawrence99">Lawrence <em>et al.</em>, 1999</a>)) search instructions say,
+  
+  <blockquote>For authors, list all variants that appear in citations, separated by &quot;or&quot;, e.g., m jordan or michael jordan or m i jordan or michael i jordan</blockquote>
+
+  but what if you do not know all the variants?   A possible alternative is to conduct a more general search, say by
+  specifying only the last name; this risks retrieving many extra documents by other people who have the
+  same last name.</li>
+  
+<li>Likewise, it is impossible to directly count the papers written by an individual, or the citations to the work of an individual. While not the primary goals of a digital library, such actions are often performed in the process of evaluating an author's work. They are also needed for more advanced services, e.g., the  generation of an author collaboration graph.</li>
+</ul>
+
+<p>Of course, detecting name equivalences is also important in other applications, e.g., the identification of returning customers (<a href="#davidson62">Davidson, 1962</a>,  <a href="#bellgb01">Bell and Sethi, 2001</a>). In fact, digital libraries seem to be a relatively easy case, because names are based on how the authors themselves write them in print, rather than on how they are entered into the system by other people.<sup><a href="#note">1</a></sup></p>
+
+<p>Nevertheless, current digital libraries do not handle this problem very well. The ACM portal takes the conservative approach of retaining all names as they appear. This includes all variants of each name, some of which are clear spelling errors. For example, the the following five entries in the author index all represent Turing award winner Niklaus Wirth:</p>
+
+<blockquote>
+N W<small>IRTH</small><br />  
+N. W<small>IRTH</small><br />  
+N<small>ICKLAUS </small>W<small>IRTH</small><br />  
+N<small>IKLAUS </small>E<sub>&deg;</sub> W<small>IRTH</small><br />  
+N<small>IKLAUS </small>W<small>IRTH</small>
+</blockquote>
+
+<p>The first one is just an abbreviation with the stop missing, and the third one is an obvious misspelling.</p>
+
+<p>The CiteSeer Website takes the opposite approach. In its listing of most cited computer scientists, only the first
+initial is ever used. This causes many distinct names to be bundled together; for example, the top entry is D. J<small>OHNSON</small>, which could be any of at least eighteen individuals, and probably more (according to a search in the <a href="http://www.informatik.uni-trier.de/~ley/db/">DBLP</a> database). Somewhat surprisingly, this practice may also split a single author into two: most of the papers by W. D<small>ANIEL </small>H<small>ILLIS</small>, for example, are attributed to W. H<small>ILLIS</small>, but
+some to D. H<small>ILLIS</small>, because the first initial is sometimes dropped.</p>
+
+<p>The goal of this work is to find automatic means to identify the nature of the mapping of names to people.
+Specifically, we want to identify situations in which multiple names actually refer to the same person. This problem has attracted research for dozens of years, due to its obvious importance in business and services, where names are often entered incorrectly due to mistranscription. One early algorithm is the <em>soundex</em> method, in which names are mapped to short codes that represent the salient features of how they sound (<a href="#knuth:art3">Knuth, 1998</a>: 394). Another is the <em>metaphone</em> method, which preserves more detail and is therefore more accurate (<a href="#philips90">Philips, 1990</a>). These methods can be used to identify large variations in the way last names (surnames) are written, but may also lead to many false positives.</p>
+
+<p>The present work is limited to identifying variations in <i>first</i> names, where the main source of variability is different forms of abbreviation&mdash;a topic that has not attracted much research in the past. Moreover, we do so using lexical means, that is, by using only the names themselves. Extensions based on semantic information are listed as future work at the end of the paper.</p>
+
+<p>It should be noted that the problem we are addressing does not have a single <em>correct</em> answer. For example, the names G. H<small>ERBERT</small> and H<small>ERBERT</small> W. may be two abbreviations of someone with the three first names G<small>EORGE</small> H<small>ERBERT</small>W<small>ALKER</small>, but they may
+also be abbreviations of two people with two first names each. It is impossible to know from the names alone.
+What we need is heuristics that work well <i>in practice</i>. We therefore use an experimental approach, and evaluate our proposed heuristics by tabulating their performance on author names from two online bibliographies.
+This enables the identification of the weaknesses of each heuristic, and the suggestion of a better one.</p>
+
+<p>The next section outlines the framework used for identifying name equivalences. It also presents the environment used for evaluations, and the evaluation results for the different heuristics. This is used to motivate the progression of heuristics detailed in the following sections.</p>
+
+<h2>Framework and evaluation</h2>
+
+<div align="center"><img width="224" height="298" align="bottom" border="0" src="p192fig3.gif" alt="" />
+</div><br />
+<div align="center"><strong>Figure 2: System framework.</strong></div>
+
+<p>
+The framework employed by our system is outlined in Figure 2. The first step is to parse and normalize the input names. This step is required in order to prepare the data for processing: to compare first names when the last name is the same, we need to know what is a first name and what is a last name. It is also used to avoid simple problems, such as variations that result from unusual capitalization or foreign accents. While not the focus of the present work, we provide some comments on this issue in <em>Parsing and normalization</em> below.</p>
+
+<p>The equivalence-detection algorithm itself operates in two phases. The first is matching pairs of names to each other. This induces a (very sparse) graph on all the names, where nodes are names, and edges represent equivalences. The second is an analysis of this graph to identify sets of names that are all equivalent to each other.
+Obviously, these names come from connected components of the graph. These phases are described in detail in subsequent sections of the paper.</p>
+
+<p>The developed heuristics are evaluated by tabulating their performance on two sets of names. The first set comes from the <a href="http://www.bow.cs.huji.ac.il/">BoW</a> database (<a href="#feitelson00">Feitelson, 2000</a>). This database contains 3,872 documents tagged with 5,740 author names. These relatively small numbers allow for a manual inspection and an educated guess at which names are indeed equivalent. The output of the heuristics is then compared with the manual evaluation, and deviations are classified as either false positives
+(the heuristic claims an equivalence that is most probably not true) or false negatives (the heuristic missed an equivalence that most probably is true).</p>
+
+<p>In addition, we also check the performance of our algorithms on a small fragment of the ACM Portal author index. The fragment used contained all the names where the last name starts with the letters F<small>E</small>.
+There were 3,076 such names. In this case a full manual inspection is impracticable, because some last names have dozens of instances, making a manual comparison of all pairs very error-prone. However, it is still possible to compare the different heuristics to each other.</p>
+
+<div align="center"><img width="388" height="260" align="bottom" border="0" src="p192fig4.gif" alt="fig3" />
+</div><br />
+<div align="center"><strong>Figure 3: The distribution of names in both datasets is Zipf-like, but with
+different exponents. The BoW dataset has an exponent of about 0.55, and the ACM dataset an exponent of about 0.9.</strong>
+</div>
+
+<p>The evaluation using a fragment of a large database is important due to non-trivial scaling effects. In a very large database, many more documents are covered. There is therefore a bigger chance to observe variations on an
+author's name. In addition, there is a bigger change to observe multiple authors that share names or at least initials (Figure 3). This makes it harder to pick out those names that are indeed equivalent to each other.</p>
+
+<p>The results of the evaluations are shown in Table 1. We take the unusual approach of showing the results first, as this will facilitate and motivate the introduction of the various algorithms. Each part of the results is discussed at the appropriate point.</p>
+
+
+<table width="80%" border="1" cellspacing="0" cellpadding="3" align="center" style="border-right: #99f5fb solid; border-top: #99f5fb solid; font-size: smaller; border-left: #99f5fb solid; border-bottom: #99f5fb solid; font-style: normal; font-family: verdana, geneva, arial, helvetica, sans-serif; background-color: #fdffdd">
+
+<caption align="bottom"><br /><strong>Table 1: Effectiveness of the different heuristics.</strong></caption>
+
+
+<tr><th rowspan="2">Heuristic</th>
+<th colspan="3">BoW</th>
+<th colspan="3">ACM</th>
+</tr>
+<tr><th>Total cliques found</th>
+<th>False positive</th>
+<th>False negative</th>
+<th>Total cliques found</th>
+<th>False positive</th>
+<th>False negative</th>
+</tr>
+<tr><td align="left">Simple match, independ clique</td>
+<td align="center">650</td>
+<td align="center">31(3)</td>
+<td align="center">47</td>
+<td align="center">306</td>
+<td align="center">8(9)</td>
+<td align="center">142</td>
+</tr>
+<tr><td align="left">Strict match, independ clique</td>
+<td align="center">629</td>
+<td align="center">4</td>
+<td align="center">41</td>
+<td align="center">312</td>
+<td align="center">1</td>
+<td align="center">131</td>
+</tr>
+<tr><td align="left">Strict match, weighted clique</td>
+<td align="center">645</td>
+<td align="center">4</td>
+<td align="center">26(1)</td>
+<td align="center">395</td>
+<td align="center">1</td>
+<td align="center">49(14)</td>
+</tr>
+<tr><td align="left">Strict match, full names, weighted clique</td>
+<td align="center">649</td>
+<td align="center">4</td>
+<td align="center">22</td>
+<td align="center">441</td>
+<td align="center">7(2)</td>
+<td align="center">7(5)</td>
+</tr>
+<tr><td align="left" colspan="7">In the BoW data, the correct number of cliques according to a manual inspection is 666, and false positives and negatives are counted relative to these manually identified cliques. For the ACM data such a manual identification is not available, so false negatives and positives are counted relative to a manual inspection of the cliques found by the algorithms.<br />
+Numbers in parentheses indicate added members or missing members from a real clique.</td>
+</tr>
+</table>
+
+
+<h2>Parsing and normalization</h2>
+
+<h3>Parsing names</h3>
+
+<p>In order to compare names to each other, one must first determine where each name starts, where it ends, what part constitutes the last name, what parts are first names, and whether any salutations or suffixes are present.
+While definitely important, this aspect of name equivalences lies outside the scope of the present work. This disregard is possible because the BoW data is based on the BibTeX format, which has strict rules that make parsing easy (actually there are additional rules for special  circumstances, but these give the gist) (<a href="#lamport94">Lamport, 1994</a>):</p>
+
+<ol>
+<li>Sequences of names referring to different people are separated by <small>AND</small> without any commas.  Example: J<small>OHN </small>S<small>MITH AND </small>J<small>EFF </small>S<small>MITH AND </small>J<small>ACK SMITH</small>.</li>
+
+<li>In a sequence of names identifying a person,
+
+<ol>
+<li>If a comma is present, the part before the comma is the last name, and the part after the comma the first name. If multiple commas are present, use the last one. Example: W<small>ATSON</small>, J<small>R</small>., T<small>HOMAS</small> J. </li>
+
+<li>If any of the names starts with a lower-case letter, the last name starts from that point.  Everything before it is a first name. Example: J<small>OHN VON </small>N<small>EUMANN</small>.</li>
+
+<li>If all names start with upper-case letters, the last one is the last name and all previous ones are first names.</li>
+</ol>
+</li>
+</ol>
+<p>The ACM Portal data is from an author index, and thus already provided as individual first and last names. We do however handle simple mundane issues, such as identifying initials without a period with initials that do have a period (e.g., J with J.), and partitioning sequences of initials into their components (e.g., A.B. is
+A. B., with two distinct abbreviated names). </p>
+
+<p>It should be noted that suffixes (such as J<small>R.</small>) are actually a qualifier of the first name, but are typically treated as part of the last name. We retain this approach. Our data did not contain any identified instance of a missing or wrong suffix. However, there are variations regarding the separation of the suffix from the last name with a comma. These are handled by the normalization.</p>
+
+<p>We note in passing that several methods can be used when the input data is less forgiving. For starters, one can compare input data with names that have been recognized in the past and are already present in the database. When the data comes from automatic acquisition of documents, it is possible to compare the list of authors at the beginning with the list of references at the end. In particular, self citations may provide important clues regarding
+the correct parsing of names, and the equivalence of different abbreviations.</p>
+
+<h3>Name normalization</h3>
+
+<p>Once the names have been parsed, it is advisable to normalize them. We performed the following types of normalization:</p>
+
+<ul>
+<li>Translate all upper-case letters to the corresponding lower-case letters.  This is useful in multi-part names, in which the second part is sometimes inconsistently written with different capitalizations.
+</li>
+<li>Remove all foreign accents.  Again, we empirically find that names are often written inconsistently, either with the wrong accent or without the accent  altogether.  Note, however, that it is important to conserve the base letter.
+  Example: T<small>HOM&#193;S</small>, T<small>HOM&#192;S</small>, and T<small>HOMAS</small>.
+</li>
+<li>Replace special characters by commonly-used alternatives. For example, <small>&#216;</small> is replaced by <small>O</small>, and <small>&#223;</small> by <small>SS</small>.  In some cases such a replacement can also be considered for accents; for example, <small>&#196;</small> is often written as <small>AE</small>.
+</li>
+
+<li>Remove all special marks, such as apostrophes. The only ones retained are hyphens.
+</li>
+</ul>
+<p>
+Actual examples illustrating the effect of these normalizations on our datasets are given in the <a href="#appendix">Appendix</a>. By far the most important is to remove foreign accents; doing so facilitates many matches that seem to be correct. The second most important is to translate upper-case letters into lower case. We did not observe situations in which these normalizations led to erroneous results.</p>
+
+
+<h2>Pairwise matching</h2>
+
+<p>The first phase of finding name equivalences is to identify all pairs of names that potentially match each other.
+As the dataset may be very large (Figure 4), it is unreasonable to check all pairs. Rather, we first divide the dataset into disjoint subsets according to the normalized last names. Within each such set, we check for equivalences among the normalized first names. This is in harmony with our focus on the variability among names that is concentrated in the first names, that may be abbreviated in different ways.</p>
+
+<div align="center"><img width="364" height="232" align="bottom" border="0" src="p192fig6.gif"
+ alt="fig4" /></div>
+ <br />
+<div align="center"><strong>Figure 4: Number of authors in the CiteSeer database is large and growing.</strong></div>
+
+<p>The following sub-sections pertain to the second step, i.e., to the matching of first names. We first consider the comparison of two names in isolation, and then the comparison of sequences of first names. Note that we take a conservative approach, and do not attempt to correct spelling errors and find names with small edit distances
+(<a href="#bellgb01">Bell and Sethi, 2001</a>). Rather, we attempt to apply domain-knowledge regarding the way names tend to be abbreviated.</p>
+
+
+<h3>Matching single names</h3>
+
+<p>When are two names actually one and the same?</p>
+
+<p>The simplest case is, of course, when they are indeed identical. Another simple case is when one is an abbreviation of the other; for example, we can safely identify J.  with J<small>OHN</small>. But there are other abbreviations that are also used, notably nicknames.</p>
+
+<p>Nicknames fall into two categories: those that are a prefix of the full name and those that are not. For example, A<small>LEX</small> can appear as a short version of A<small>LEXANDER</small>. This is a prefix, and can be handled easily as shown below. But B<small>ILL</small> may appear as a short version of W<small>ILLIAM</small>.
+This is not a prefix, and can only be identified using table lookup.</p>
+
+<p>Our proposed approach is to only try and identify nicknames that are a prefix of the full name. This is done as follows. Whenever two names are compared, we use the shorter one to create a regular expression, and match this regular expression with the longer. The regular expression is obtained by removing the trailing stop, if any, and allowing an arbitrary suffix. In the case of hyphenated names, each part is treated separately. This is illustrated in Table 2.</p>
+
+
+
+<table width="80%" border="1" cellspacing="0" cellpadding="3" align="center" style="border-right: #99f5fb solid; border-top: #99f5fb solid; font-size: smaller; border-left: #99f5fb solid; border-bottom: #99f5fb solid; font-style: normal; font-family: verdana, geneva, arial, helvetica, sans-serif; background-color: #fdffdd">
+
+<caption align="bottom"><strong>Table 2: Turning names into regular expressions for matching. </strong></caption>
+
+<tr><th>Name</th>
+<th>Regexp</th>
+<th>Matches</th>
+</tr>
+<tr><td align="left">J<sub>&deg;</sub></td>
+<td align="left">j<sub><sup>&bull;</sup></sub>*
+</td>
+<td align="left">J<sub>&deg;</sub>, J<small>ON,
+  </small>J<small>OHN, </small>J<small>OHNNY, </small>J<small>OHNNIE,
+  </small>J<small>O</small>, J<small>OE, </small>J<small>OSEPH,
+  </small>J-H<sub>&deg;</sub>,
+  J<sub>&deg;</sub>-H<sub>&deg;</sub>,
+  J<small>IE-</small>H<small>IE</small></td>
+</tr>
+<tr><td align="left">J<small>OHN</small></td>
+<td align="left">john<sub><sup>&bull;</sup></sub>*
+  </td>
+<td align="left">J<small>OHN, </small>J<small>OHNNY, </small>J<small>OHNNIE</small></td>
+</tr>
+<tr><td align="left">J<sub>&deg;</sub>-H<sub>&deg;</sub> </td>
+<td align="left">j<sub><sup>&bull;</sup></sub>*-h<sub><sup>&bull;</sup></sub>*</td>
+<td align="left">J<sub>&deg;</sub>-H<sub>&deg;</sub>, J-H<sub>&deg;</sub>, J<small>IE-</small>H<small>IE</small></td></tr>
+<tr><td colspan="3"><sub><sup>&bull;</sup></sub> denotes a match to any character, and * means that the previous element (in our case, the <sub><sup>&bull;</sup></sub>) is repeated zero or more times.</td></tr>
+</table>
+
+<p>The problem with this approach is that it may also be the case that one name just happens to be a prefix of another name, without being a nickname. For example, R<small>ON</small> may be an abbreviation of R<small>ONALD</small>, but it may also be a distinct name by itself. Worse, P<small>AUL</small> is a prefix of P<small>AULA</small>, without being an abbreviation. Therefore, we tabulate all the matches that occurred in practice in our datasets in the <a href="#appendix">
+Appendix
+</a>. This indicates that the proposed approach identifies many real matches, while only introducing a small number of false matches. In the BoW dataset, for example, sixteen correct matches depended on this feature, and only three incorrect matches were introduced. In the ACM dataset, there were twenty-four correct matches and twelve incorrect. The most common correct match was Steve as an abbreviation for Steven; the incorrect ones were all different. In both datasets, these incorrect matches were responsible for most of the false positives in the equivalence finding schemes based on strict matching. However, many nicknames are missed because they are not a prefix; in the BoW dataset, there were thirteen such cases, and in the ACM dataset six were identified (but it is plausible that there were more, as a full manual inspection was not performed).
+Mike as an abbreviation for Michael is the most common. Thus using table lookup should be considered.</p>
+
+<p>A special case occurs with hyphenated names. Such names may display various alternative forms: the second part can start with and upper-case or lower-case letter (handled by our normalization), the hyphen may be replaced by a
+space (turning a single hyphenated name into two independent names), or the hyphen may be deleted altogether (turning a hyphenated name into a regular name, possibly with special capitalization). At this point we chose to only give cursory treatment to these problems. We retain hyphens and try to match both parts, but do not attempt to
+treat all other variations. The full treatment of hyphenated names is left to future work.</p>
+
+<h3>Simple matching algorithm</h3>
+
+<p>Given the regular-expression-based mechanism to compare single names, we turn to the comparison of sequences of names. It is obvious that sequences of first names are often abbreviated, and sometimes some of the names are simply not used. However, we offer the observation that names which are retained will appear in the same order
+(there were only two exceptions found in our datasets). This motivates the following simple matching rule:</p>
+
+<blockquote>Each name appearing in the shorter list must be matched with a name in the longer list, in the same order.</blockquote>
+
+<p>Note that we do not place a special emphasis on the first name, and do not distinguish it from the middle names.
+This is because there are quite a few people who prefer their middle names, and therefore tend to discard the first name and retain the middle one when abbreviating.</p>
+
+<p>However, this simple matching rule produces dismal results, and is especially prone to false positives (see the top row in Table 1). The reason is that there is no preference to the matching of full names as opposed to abbreviations. For example, it is clear that it is unlikely that D<small>AVID</small> P. is a variant of P<small>AUL</small>, but if we skip the D<small>AVID</small> in the longer name, and then match the initial P.  with the name Paul, we abide by the above rule.</p>
+
+<h3>Strict matching algorithm</h3>
+
+<p>To give full names their proper due, we propose the following rule:</p>
+
+<blockquote>If we match any abbreviation in a sequence of names, we must also match all full names that appear in that sequence.</blockquote>
+
+<p>Abbreviations, for the purpose of this rule, are single letter names such as J.  or J.-H. This solves problems like the one posed by the above example, because if we want to match P.  with Paul, we must also match D<small>AVID</small>. If we cannot do so we declare that the two name sequences do not match. Note that in implementing this rule we need only count matched names in the longer sequence, because if all names in the shorter sequence are not matched, the matching fails anyway.</p>
+
+<p>However, this does not fully solve the problem. Consider matching the names D<small>AVID </small>P.  with the names D. P<small>AUL</small>. This will abide by the rule that all full names need to be matched. What is missing is a sense of directionality: if we match a full name from one sequence to an abbreviation in another, we should not do so in the other direction as well. This is formulated by</p>
+
+<blockquote>Matching full names to abbreviations should only be done in one direction.  For this rule, skipping a full name qualifies as matching it to an abbreviation.</blockquote>
+
+<p>Note that in implementing this rule we should also check names in the longer sequence that are left over after all names in the shorter sequence are matched.</p>
+
+<p>The experimental results in Table 1 show that using the strict matching rules eliminates practically all false positives. We therefore base the quest for cliques of equivalent names on these matching rules.</p>
+
+<h2>Choosing among alternative matches</h2>
+
+<p>Given the set of pairwise equivalences among names, we want to find sets of names that are all equivalent to each other&mdash;in other words, we want to find cliques. Finding maximal cliques is in general NP-complete, but efficient algorithms are known that work on large graphs (<a href="#tomita03">Tomita and Seki, 2003</a>).
+In our case in particular this is not a problem, because we work on sets of names that have the same last name, and these are typically of limited size. The variants of clique matching we use are described below.</p>
+
+<p>The description here considers the algorithm as an off-line process. In a real digital library it should be on-line: we have an existing database with equivalences that have been identified in the past, and need to add new authors as they are introduced. But this can easily be done by re-computing all equivalences for the new author's last name, thus reverting to the off-line version.</p>
+
+<h3>Independent cliques</h3>
+
+<p>The simplest approach to identifying cliques of equivalent names is to require independent cliques. This is a simple quadratic algorithm: for each name, traverse its list of equivalences, and verify that this set forms a clique. If they do, they are all considered equivalent. If any of them have additional equivalences outside the set, then the members of this set are not considered equivalent to each other.</p>
+
+<p>The results in the second row of Table 1 indicate that this works pretty well for small repositories like BoW.
+However, it is too restrictive for large repositories like that of the ACM. In large repositories there may be very many names that share the same last name. It is then highly probable that several names will share an initial,
+and thus not be independent of each other. We therefore need to allow cliques that have some external neighbours.
+The difference between the clique members and the external neighbours is that the members are connected to each other more tightly. For this, we need to quantify the strength of the matching between names.</p>
+
+<h3>Weighted cliques</h3>
+
+<p>Weighted cliques are cliques based on high-weight equivalences. The weight is defined simply by the number of names matched: matching three names creates a stronger connection than matching only two, and matching two is better than only one.</p>
+
+
+<div align="center"><img width="305" height="99" align="bottom" border="0" src="p192fig5.gif" alt="Fig5" /></div>
+<br />
+<div align="center"><br /><strong>Figure 5: Example of finding a high-weight clique in a graph of equivalences
+weighted by names matched.</strong></div>
+
+<p>A simple example of the effect of such weighting is given in Figure 5. The initial M  matches all other names, and therefore no independent cliques are possible. But if we use weighting by the number of names matched, we can find that the names M. J., M<small>ICHAEL </small>J., and M<small>ICHAEL </small>J<small>OSEPH</small> form a clique of weight 2 (heavy lines in the figure). All the others are connected to this clique by links of weight 1.</p>
+
+<p>The heuristic for finding cliques must now be modified to acknowledge the weights on the links. In particular, the order in which names are considered becomes important. Our solution is as follows, and is illustrated in Figure 6.</p>
+
+<div align="center"><img width="261" height="143" align="bottom" border="0" src="p192fig6.gif" alt="fig6" /></div>
+<br />
+<div align="center"><strong>Figure 6: Illustrative example of the heuristic for weighted cliques.</strong>
+</div>
+
+<ol>
+<li>First sort the names according to their heaviest equivalence, from heavy to light. In the example the first are A. B. C.  and A<small>BE </small>B<small>OB</small> C., then A<small>CE</small> D. E.,  A. D., and A<small>BE</small> B.,   and finally A.  and A<small>BE</small> F. G..  (Note that the maximal equivalence does not necessarily correspond
+to the number of names.)
+</li>
+<li>For each one, identify the set of its neighbours that all have the highest equivalence score. In the example, starting from A. B. C., it has one such neighbour: A<small>BE </small>B<small>OB </small>C.. </li>
+<li>Verify that this set is a high-weight clique. This means that it is a clique when all edges with lower weights are
+ignored.  Cases of only two nodes, as in the example, are sure to pass this test. If the set is indeed a clique, try to expand it. Otherwise return to step 2.</li>
+<li>Try to expand the found clique by adding names that have lower-weight connections. The criteria for adding to the clique are that the new name should be linked to all current clique members and, furthermore, that all its top-weight neighbours should be in the clique. In the example, A<small>BE</small>B. will be added, but A. will not. 
+</li>
+<li>When finished with this clique, continue with the main loop (step 2), but skip all names that have already been
+  assigned.   In the example, this will find another clique composed of   A<small>CE</small> D. E.  and A. D.. </li>
+</ol>
+
+<p>The results in Table 1 show that using weighted matching identifies many of the missing cliques. But when large groups of names are involved, this is not enough. Consider the example in Figure 7(a). When all names have the same weight, there are so many equal-weight connections that it is impossible for any clique to stand out. But if we give a higher weight to the matching of full names, two obvious candidates stand out (Figure 7(b)).</p>
+
+<div align="center"><img width="583" height="191" align="bottom" border="0" src="p192fig7.gif" alt="fig7" />
+</div>
+<br />
+<div align="center"><strong>Figure 7: Adding weight to matching of full names.</strong>
+</div>
+
+<p>The question is what weight to give to the matching of full names. Specifically, should full names count more or less than additional names? Our results indicate that matching more names is more important than matching full names, so we only give full names a sight advantage: a weight of 1.1 as opposed to a weight of 1 when matching an
+abbreviation.</p>
+
+<p>The final results are shown in the bottom row of Table 1. The improvement is especially striking for the ACM data. The reason is that this is based on a very large database, including some popular names that are repeated dozens of times. As a result, situations such as those portrayed above do occur in practice. An example based on the last name F<small>ELDMAN</small> is given in Figure 8. In this large connected component of the graph, no cliques are found if they are required to be independent. By using weighted cliques, three are found. By giving full names extra weight, another four are found. All of these are considered correct, and no additional real
+equivalences seem to exist in this example.</p>
+
+<div align="center"><img width="687" height="429" align="bottom" border="0" src="p192fig8.gif" alt="fig8" />
+</div>
+<br />
+<div align="center"><strong>Figure 8: Largest connected component from the graph of equivalences of people
+with last name F<small>ELDMAN</small> from the ACM dataset.</strong></div>
+
+
+<h2>Future work</h2>
+
+<p>Our heuristics achieve significant simplifications in the author indices of digital libraries. In BoW, the number of distinct authors is reduced from 5,740 to 3,580. In the ACM data, it is reduced from 3,076 to 1,007. In both cases, the vast majority of equivalences found are thought to be true. However, these heuristics only use lexical data, and do not even exhaust this type of data.</p>
+
+<p>The main issue that is yet unresolved is the best handling of hyphenated names. Hyphenation is especially common in Asian and French names. Based on our data is seems that Asian authors at least tend not to abbreviate their names. The rules appropriate to Asian names may therefore be different from those that are best for western names. For example, it seems that partial matching that was good for identifying western nicknames only introduces errors in the context of Asian names. Also, the handling of missing hyphens deserves more work.</p>
+
+<p>Another issue that should be handled is the automatic elimination of errors. Any algorithm can only be as good as its input. It is plausible that at least some misspellings can be caught by comparing with other names already in the database, and selecting the more common version. This can be done based on matching a core code that represents the essence of each name, as was suggested in early applications requiring the retrieval of names (<a
+ href="#davidson62">Davidson, 1962</a>).</p>
+
+<div align="center"><img width="203" height="106" align="bottom" border="0" src="p192fig9.gif" alt="fig9" />
+</div>
+<br />
+<div align="center"><strong>Figure 9: Correcting a misspelled name (C<small>HRISTOL</small>) may allow a new clique to be identified.</strong></div>
+
+<p>In this context, it should be noted that correcting spelling errors will not only add the misspelled names to existing cliques, but will also allow many additional cliques to be found. The reason is that misspellings cause the current heuristics to think that different names are equally likely; by eliminating such competition, new cliques will emerge (Figure 9).</p>
+
+<p>A complete new field of study is the use of semantic information. The matching of names can be integrated with checking co-authors, the venues where works are published, and the keywords that appear in the full text of authored articles. It is also possible to glean information from common linking to papers from authors' home pages.
+Use of such semantic information is expected to be useful for the hardest cases, e.g., when different people actually share the same name.</p>
+
+<p>Finally, the effect of the size of the dataset on the results of the heuristics is very interesting. We showed that as the dataset increases in size, the heuristics need a higher degree of fidelity to extract the real equivalences.
+It would be valuable to conduct repeated measurements on a variety of database sizes, to verify and characterize this effect.</p>
+
+<h2><a id="note" name="note">Note</a></h2>
+
+<p>1.	The limitation to digital libraries is deliberate, as the question of name equivalences in databases in general
+is much more complex. Specifically, in digital libraries the basis for the data is how authors themselves put their names in print, and in many cases the parsing into first and last names is known; these points are actual
+assumptions of this paper, and parsing and correction of spelling is not dealt with. Although the definition of <em>digital library</em> is not clear cut, some repositories, such as the CiteSeer site, are publicised as <em>digital libraries</em>.</p>
+
+<h2>References</h2>
+
+<ul>
+<li><a id="bellgb01" name="bellgb01" />Bell, G.B. &amp; Sethi, A. (2001). Matching records in a national medical patient index. <em>Communications of the ACM</em>, <strong>44</strong>(9), 83-88.</li>
+
+<li><a id="davidson62" name="davidson62" />Davidson, L. (1962). Retrieval of misspelled names in an airlines passenger record system. <em>Communications of the ACM</em>, <strong>5</strong>(3), 169-171.</li>
+
+<li><a id="feitelson00" name="feitelson00" />Feitelson, D.G. (2000). Cooperative indexing, classification, and evaluation in BoW. In <em>7th IFCIS international conference on cooperative information systems</em> (pp. 66-77).
+Berlin: Springer-Verlag. (Lecture notes on computer science volume 1901).</li>
+
+<li><a id="knuth:art3" name="knuth:art3" />Knuth, D.E. (1998).  <em>The art of computer programming. Vol 3: Sorting and searching</em>. (2nd. ed.). Reading, MA: Addison-Wesley. </li>
+
+<li><a id="lamport94" name="lamport94" />Lamport, L. (1994).  <em>LaTeX: A document preparation system</em>.
+(2nd. ed.). Reading, MA: Addison-Wesley. </li>
+
+<li><a id="lawrence99" name="lawrence99" />Lawrence, S., Giles, C.L., &amp; Bollacker, K. (1999). Digital libraries and autonomous citation indexing. <em>Computer</em>, <strong>32</strong>(6), 67-71.</li>
+
+<li><a id="philips90" name="philips90" />Philips, L. (1990). Hanging on the metaphone. <em>Computer Language Magazine</em>, <strong>7</strong>(12), 38-44.</li>
+
+<li><a id="tomita03" name="tomita03" />Tomita, E. &amp; Seki, T. (2003). An efficient branch-and-bound algorithm for finding a maximum clique. In <em>Discrete mathematics and theoretical computer science</em>. (pp. 278-289). Berlin: Springer-Verlag. (Lecture notes on computer science volume 2731).</li>
+</ul>
+
+
+
+<h2><a id="appendix" name="appendix"></a>Appendix: Examples of real data</h2>
+
+<p>
+The following is a listing of data quoted in the text.</p>
+
+<p>
+In the BoW dataset, the following matches relate to normalization:</p>
+<ul>
+<li>Normalizations that facilitated correct matches
+<ol>
+<li>A<small>DAMS, </small>III / A<small>DAMS </small>III
+</li>
+<li>B<small>J&#216;RN</small> / B<small>JORN</small>
+</li>
+<li>B<small>&#220;LENT</small> / B<small>ULENT</small>
+</li>
+<li>C<small>HAO-</small>J<small>U</small> / C<small>HAO-JU</small>
+</li>
+<li>C<small>HUAN-</small>L<small>IN</small> / C<small>HUAN-LIN</small>
+</li>
+<li>B<small>REZ&#193;NY</small> / B<small>REZANY</small>
+</li>
+<li>G<small>ARC&#205;A-</small>M<small>OLINA</small> / G<small>ARCIA-</small>M<small>OLINA</small>
+</li>
+<li>H<small>&#201;CTOR</small> / H<small>ECTOR</small>
+</li>
+<li>G<small>&#220;NTER</small> / G<small>UNTER</small>
+</li>
+<li>J<small>OS&#201;</small> / J<small>OSE</small> (2 times)
+</li>
+<li>K<small>I-</small>C<small>HANG</small> / K<small>I-CHANG</small>
+</li>
+<li>L<small>OHR</small> / L<small>&#214;HR</small>
+</li>
+<li>S<small>HANG-</small>H<small>UA</small> / S<small>HANG-HUA</small>
+</li>
+<li>S<small>TEELE, </small>J<small>R</small>  / S<small>TEELE </small>J<small>R</small> 
+</li>
+<li>T<small>HI&#201;BAUT</small> / T<small>HIEBAUT</small>
+</li>
+</ol>
+</li>
+<li>Normalizations that caused what are probably incorrect matches
+<br />None found.
+</li>
+<li>Normalizations that were not identified
+<ol>
+<li>M<small>&#196;NNER</small> / M<small>AENNER</small>
+</li>
+</ol>
+</li>
+</ul>
+
+<p>
+In the ACM dataset, the following matches relate to normalizations:</p>
+<ul>
+<li>Normalizations that facilitated correct matches
+<ol>
+<li>A<small>NT&#212;NIO</small> / A<small>NT&#211;NIO</small> / A<small>NTONIO</small>
+</li>
+<li>C<small>ARR&#193;</small> / C<small>ARRA'</small>
+</li>
+<li>G<small>Y&#214;RGY</small> / G<small>YORGY</small>
+</li>
+<li>J<small>&#201;R&#212;ME</small> / J<small>&#201;ROME</small>
+</li>
+<li>J<small>IR&#205;</small> / J<small>IR&#205;</small>
+</li>
+<li>J<small>OS&#201;</small> / J<small>OSE</small>
+</li>
+<li>R<small>APHA&#203;L</small> / R<small>APHAEL</small>
+</li>
+<li>R<small>OG&#201;RIO</small> / R<small>OGERIO</small>
+</li>
+<li>S<small>&#193;NDOR</small> / S<small>ANDOR</small> (2 times)
+</li>
+<li>T<small>OM&#193;S</small> / T<small>OM&#192;S</small> / T<small>OMAS</small>
+</li>
+<li>T.<small>Y.</small> / T.-Y.
+</li>
+</ol>
+</li>
+<li>Normalizations that caused what are probably incorrect matches
+<br />None found.
+</li>
+<li>Normalizations that were not identified
+<ol>
+<li>B<small>J&#214;RN</small> / B<small>JOERN</small>
+</li>
+</ol>
+</li>
+</ul>
+
+<p>
+In the BoW dataset, the following matches relate to nicknames:</p>
+<ul>
+<li>Nicknames that facilitated correct matches
+<ol>
+<li>A<small>LEX</small> / A<small>LEXANDRU</small>
+</li>
+<li>A<small>NGELO</small> / A<small>NGELOS</small>
+</li>
+<li>D<small>AN</small> / D<small>ANIEL</small>
+</li>
+<li>G<small>REG</small> / G<small>REGORY</small> (2 times)
+</li>
+<li>J<small>EFF</small> / J<small>EFFREY</small>
+</li>
+<li>K<small>EN</small> / K<small>ENNETH</small>
+</li>
+<li>K<small>RITHI</small> / K<small>RITHIVASAN</small>
+</li>
+<li>P<small>ETE</small> / P<small>ETER</small>
+</li>
+<li>P<small>HIL</small> / P<small>HILIP</small>
+</li>
+<li>P<small>RITH</small> / P<small>RITHVIRAJ</small>
+</li>
+<li>R<small>ICH</small> / R<small>ICHARD</small>
+</li>
+<li>R<small>ON</small> / R<small>ONALD</small>
+</li>
+<li>S<small>AM</small> / S<small>AMUEL</small>
+</li>
+<li>S<small>TEVE</small> / S<small>TEVEN</small> (2 times)
+</li>
+</ol>
+</li>
+<li>Nicknames that caused what are probably incorrect matches
+<ol>
+<li>J<small>ONG</small> / J<small>ONG-</small>U<small>K</small>
+</li>
+<li>L<small>I</small> / L<small>IXIA</small>
+</li>
+<li>S<small>U</small> / S<small>UKIL</small>
+</li>
+</ol>
+</li>
+<li>Nicknames that were not identified
+<ol>
+<li>A<small>VI</small> / A<small>BRAHAM</small>
+</li>
+<li>B<small>ILL</small> / W<small>ILLIAM</small>
+</li>
+<li>C<small>EZARY</small> / C<small>ZAREK</small>
+</li>
+<li>C<small>HARLIE</small> / C<small>HARLES</small>
+</li>
+<li>G<small>ARY</small> / G<small>REGORY</small>
+</li>
+<li>J<small>IM</small> / J<small>AMES</small>
+</li>
+<li>K<small>ATHY</small> / K<small>ATHERINE</small>
+</li>
+<li>M<small>IKE</small> / M<small>ICHAEL</small> (3 times)
+</li>
+<li>R<small>ICK</small> / R<small>ICHARD</small>
+</li>
+<li>T<small>OM</small> / T<small>HOMSON</small>
+</li>
+<li>W<small>M</small> / W<small>ILLIAM</small>
+</li>
+</ol>
+</li>
+</ul>
+
+<p>
+In the ACM dataset, the following matches relate to nicknames:</p>
+<ul>
+<li>Nicknames that facilitated correct matches (including
+  abbreviations and misspellings)
+<ol>
+<li>A<small>LEX</small> / A<small>LEXANDER</small>
+</li>
+<li>A<small>LEX</small> / A<small>LEXANDRE</small>
+</li>
+<li>A<small>W</small> / A<small>WI</small>
+</li>
+<li>B<small>RIGIT</small> / B<small>RIGITT</small>
+</li>
+<li>C<small>H</small> / C<small>HRISTOPHER</small>
+</li>
+<li>C<small>HRIS</small> / C<small>HRISTOPHER</small> (2 times)
+</li>
+<li>D<small>EB</small> / D<small>EBORAH</small>
+</li>
+<li>D<small>ON</small> / D<small>ONALD</small>
+</li>
+<li>D<small>OUG</small> / D<small>OUGLAS</small>
+</li>
+<li>E<small>D</small> / E<small>DWARD</small> (2 times)
+</li>
+<li>G<small>REG</small> / G<small>REGORY</small>
+</li>
+<li>J<small>EFF</small> / J<small>EFFERY</small>
+</li>
+<li>L<small>EO</small> / L<small>EONIDAS</small>
+</li>
+<li>P<small>AT</small> / P<small>ATRICIA</small>
+</li>
+<li>P<small>HIL</small> / P<small>HILLIP</small>
+</li>
+<li>R<small>ON</small> / R<small>ONALD</small>
+</li>
+<li>R<small>ONALD</small> / R<small>ONALDO</small>
+</li>
+<li>S<small>ID</small> / S<small>IDNEY</small>
+</li>
+<li>S<small>TEVE</small> / S<small>TEVEN</small> (2 times)
+</li>
+<li>T<small>H</small> / T<small>HOMAS</small>
+</li>
+<li>U<small>RI</small> / U<small>RIEL</small>
+</li>
+<li>Y<small>A</small> / Y<small>AKOV</small>
+</li>
+</ol>
+</li>
+<li>Nicknames that caused what are probably incorrect matches
+<ol>
+<li>A<small>NNE</small> / A<small>NNEMARIE</small>
+</li>
+<li>C<small>HIH-</small>C<small>HUN</small> / C<small>HIH-</small>C<small>HUNG</small>
+</li>
+<li>D<small>E</small> (as part of S<small>ILENE </small>D<small>E </small>F<small>REITAS</small>)  / D<small>ENIS</small>
+</li>
+<li>J<small>OSE</small> / J<small>OSEPH</small>
+</li>
+<li>J<small>UN</small> / J<small>UNKANG</small>
+</li>
+<li>K<small>E</small> / K<small>EQI</small>
+</li>
+<li>M<small>ARY</small> / M<small>ARY-</small>E<small>LLEN</small>
+</li>
+<li>P<small>AUL</small> / P<small>AULA</small>
+</li>
+<li>Q<small>IAN</small> / Q<small>IANGZE</small>
+</li>
+<li>T<small>IAN</small> / T<small>IAN-</small>J<small>IN</small>
+</li>
+<li>X<small>IANG</small> / X<small>IANG-</small>L<small>I</small>
+</li>
+<li>Y<small>ONG</small> / Y<small>ONGXIAN</small>
+</li>
+<li>Z<small>HANG</small> / Z<small>HANGJUN</small>
+</li>
+</ol>
+</li>
+<li>Nicknames that were not identified
+<ol>
+<li>D<small>AVE</small> / D<small>AVID</small>
+</li>
+<li>M<small>IKE</small> / M<small>ICHAEL</small> (4 times)
+</li>
+<li>R<small>ICK</small> / R<small>ICHARD</small>
+</li>
+</ol>
+</li>
+</ul>
+
+<hr style="COLOR: #000080" size="1" />
+<table cellspacing="10" align="center">
+<tr><td align="center" valign="top">
+</td><center>
+<form method="get" action="http://scholar.google.com/scholar" target="_blank">
+<table bgcolor="#ffffff">
+<tr><td nowrap="nowrap" valign="top" align="center" height="32">
+<input type="hidden" name="q" size="31" maxlength="255" value="&quot;name equivalences&quot;  &quot;digital libraries&quot;" /></input> <br />
+<input type="submit" name="sa" value="Scholar Search"  style="font-family: Verdana; font-weight: bold; font-size: small;" /></input>
+<input type="hidden" name="num" value="100" /></input>
+</td></tr></table></form>
+<td colspan="2" align="center" style="font-family: verdana; font-size: small; font-weight: bold;">Find other papers on this subject.</td>
+</center>
+<td align="center" valign="top">
+<!-- Search Google -->
+<center>
+<form method="get" action="http://www.google.com/custom" target="_top">
+<table bgcolor="#ffffff">
+<tr><td nowrap="nowrap" valign="top" align="center" height="32">
+<input type="hidden" name="q" size="31" maxlength="255" value="&quot;name equivalences&quot;  &quot;digital libraries&quot;" /></input><br />
+<input type="submit" name="sa" value="Google Search" style="font-family: Verdana; font-size: small; font-weight: bold;" /></input>
+<input type="hidden" name="client" value="pub-5081678983212084" /></input>
+<input type="hidden" name="forid" value="1" /></input>
+<input type="hidden" name="ie" value="ISO-8859-1" /></input>
+<input type="hidden" name="oe" value="ISO-8859-1" /></input>
+<input type="hidden" name="cof" value="GALT:#0066CC;GL:1;DIV:#999999;VLC:336633;AH:center;BGC:FFFFFF;LBGC:FF9900;ALC:0066CC;LC:0066CC;T:000000;GFNT:666666;GIMP:666666;FORID:1;" /></input>
+<input type="hidden" name="hl" value="en" /></input>
+</td></tr></table>
+</form>
+</center>
+<!-- Search Google -->
+</td></tr>
+</table>
+
+<hr style="COLOR: #000080" size="1" />
+<div align="center">
+<h4>How to cite this paper:</h4>
+Feitelson, D. G. (2004) &quot;On identifying name equivalences in digital libraries&quot;. &nbsp; <em>Information Research</em>, <strong>9</strong>(4) paper 192 [Available at http://InformationR.net/ir/9-4/paper192.html]</div>
+<br />
+<hr style="COLOR: #000080" size="1" />
+<div>Check for citations, <a href="http://scholar.google.co.uk/scholar?hl=en&amp;q=http://informationr.net/ir/9-4/paper192.html&amp;btnG=Search&amp;as_sdt=2000">using Google Scholar</a></div>
+
+<hr style="COLOR: #000080" size="1" />
+
+<table align="center" cellpadding="10">
+<tr><td align="center" valign="top"><div>
+<img src="http://counter.digits.com/wc/-d/-z/6/-b/FF0033/paper192" align="middle"  width="60" height="20" border="0" hspace="4" vspace="2" alt="counter" /><br /><a href="http://www.digits.com/ ">Web Counter</a>
+</div></td>
+
+<td align="center" valign="top"><div>
+&copy; the author, 2004. <br />Last updated: 12 July, 2004
+</div></td>
+
+<td align="center" valign="middle"><img src="../valid-xhtml10.gif" alt="Valid XHTML 1.0!" height="16" width="44" />
+</td></tr>
+</table>
+<hr size="1" style="color:#000080 ;" />
+<table align="center"><tr><td><div id="button">
+<ul>
+	<li><a href="infres94.html">Contents</a> | </li>
+	<li><a href="../iraindex.html">Author index</a> | </li>
+	<li><a href="../irsindex.html">Subject index</a> | </li>
+	<li><a href="../search.html">Search</a> | </li>
+	<li><a href="../index.html">Home</a></li>
+</ul>
+</div></td></tr></table>
+<hr size="3" style="color:#000080 ;" />
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-672528-1";
+urchinTracker();
+</script>
+</body>
+</html>

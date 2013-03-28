@@ -1,0 +1,50 @@
+
+			body {
+				margin-left: 15%; margin-right: 10%
+			}
+			DIV {
+				text-align : center;
+				font-family : Verdana;
+				font-size : 10pt;
+				font-weight : bold;
+			}
+
+			h1 {
+			
+				COLOR: maroon; FONT-FAMILY: verdana; FONT-SIZE: 11pt; FONT-STYLE: normal; TEXT-ALIGN: center;
+			}
+			
+			blockquote {
+				BACKGROUND-COLOR: #FFFFCE;
+				COLOR: black;
+				FONT-FAMILY: sans-serif;
+				FONT-SIZE: 12pt;
+				FONT-STYLE: italic;
+				FONT-WEIGHT: 500;
+				MARGIN-LEFT: 50px;
+				MARGIN-RIGHT: 50px;
+				TEXT-ALIGN: justify
+			}
+			h2 {
+				margin-left: -8%; COLOR: maroon; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif; FONT-SIZE: 12pt; FONT-STYLE: normal; FONT-WEIGHT: normal; TEXT-ALIGN: left;
+			}
+			h3 {
+				margin-left: -5%; COLOR: navy; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif; FONT-SIZE: 11pt; FONT-STYLE: normal; FONT-WEIGHT: bold; TEXT-ALIGN: left;
+			}
+
+			h4 {
+				color: navy; FONT-FAMILY: verdana, sans-serif; FONT-SIZE: 12pt; FONT-STYLE: italic; FONT-WEIGHT: bold; TEXT-ALIGN: center; 
+			}
+
+			p {
+				COLOR: black; FONT-FAMILY: sans-serif; FONT-SIZE: 12pt; FONT-STYLE: normal; FONT-WEIGHT: normal; TEXT-ALIGN: justify;
+			}
+			li {
+				COLOR: black; FONT-FAMILY: sans-serif; FONT-SIZE: 12pt; FONT-STYLE: normal; FONT-WEIGHT: normal;
+			}
+			ol {
+				COLOR: black; FONT-FAMILY: sans-serif; FONT-SIZE: 12pt; FONT-STYLE: normal; FONT-WEIGHT: normal;
+			}
+			ul {
+				COLOR: black; FONT-FAMILY: sans-serif; FONT-SIZE:12pt; FONT-STYLE: normal; FONT-WEIGHT: normal;
+			}

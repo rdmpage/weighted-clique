@@ -1,0 +1,48 @@
+body {
+				margin-left: 15%; margin-right: 10%
+			}
+			DIV {
+				text-align : center;
+				font-family : Arial;
+				font-size : small;
+				font-weight : bold;
+			}
+
+			h1 {
+				COLOR: maroon; FONT-FAMILY: serif; FONT-SIZE: x-large; FONT-STYLE: normal; FONT-WEIGHT: bold; TEXT-ALIGN: center
+			}
+			blockquote {
+				BACKGROUND-COLOR: #FFFFCE;
+				COLOR: black;
+				FONT-FAMILY: serif;
+				FONT-SIZE: medium;
+				FONT-STYLE: italic;
+				FONT-WEIGHT: 500;
+				MARGIN-LEFT: 50px;
+				MARGIN-RIGHT: 50px;
+				TEXT-ALIGN: justify
+			}
+			h2 {
+				margin-left: -8%; COLOR: maroon; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif; FONT-SIZE: medium; FONT-STYLE: normal; FONT-WEIGHT: bold; TEXT-ALIGN: left
+			}
+			h3 {
+				margin-left: -5%; COLOR: navy; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif; FONT-SIZE: medium; FONT-STYLE: normal; FONT-WEIGHT: bold; TEXT-ALIGN: left
+			}
+
+			h4 {
+				color: navy; FONT-FAMILY: Times, Times Roman, serif; FONT-SIZE: large; FONT-STYLE: italic; FONT-WEIGHT: bold; TEXT-ALIGN: left 
+			}
+
+			p {
+				COLOR: black; FONT-FAMILY: serif; FONT-SIZE: large; FONT-STYLE: normal; FONT-WEIGHT: normal; TEXT-ALIGN: justify
+			}
+			li {
+				COLOR: black; FONT-FAMILY: serif; FONT-SIZE: medium; FONT-STYLE: normal; FONT-WEIGHT: normal
+			}
+			ol {
+				COLOR: black; FONT-FAMILY: serif; FONT-SIZE: medium; FONT-STYLE: normal; FONT-WEIGHT: normal
+			}
+			ul {
+				COLOR: black; FONT-FAMILY: serif; FONT-SIZE:medium; FONT-STYLE: normal; FONT-WEIGHT: normal
+			}
+
