@@ -1,11 +1,11 @@
 # $Id: Makefile.am,v 1.1.1.1 2007/10/28 08:36:53 rdmp1c Exp $
 
 GRAPHDIR	= graph
-LIBS		= -lGTL -L$(GRAPHDIR) -lgraph 
-INCLUDES 	= -I$(GRAPHDIR) 
+LIBS		= -lGTL -L$(GRAPHDIR) -lgraph -L/usr/local/lib
+INCLUDES 	= -I$(GRAPHDIR)
 
-AM_CXXFLAGS=-Wno-deprecated
-AM_CFLAGS=-Wno-deprecated
+AM_CXXFLAGS=-Wno-deprecated -I/usr/local/include
+AM_CFLAGS=-Wno-deprecated 
 
 SUBDIRS = graph
 

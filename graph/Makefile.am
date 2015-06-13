@@ -1,5 +1,7 @@
 # $Id: Makefile.am,v 1.2 2005/08/16 12:23:20 rdmp1c Exp $
 
+AM_CXXFLAGS=-Wno-deprecated -I/usr/local/include
+
 noinst_LIBRARIES = libgraph.a
 
 libgraph_a_SOURCES = mygraph.h mygraph.cpp mytree.h mytree.cpp \

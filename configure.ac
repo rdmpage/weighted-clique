@@ -2,8 +2,9 @@
 
 dnl Process this file with autoconf to produce a configure script
 
-AC_INIT(equivalent.cpp)
-AM_INIT_AUTOMAKE(wc, 0.1)
+AC_INIT(wc, 0.1)
+AC_CONFIG_SRCDIR(equivalent.cpp)
+AM_INIT_AUTOMAKE
 AC_PROG_CXX
 AC_LANG_CPLUSPLUS
 AC_PROG_CC

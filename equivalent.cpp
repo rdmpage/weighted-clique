@@ -125,7 +125,7 @@ int main (int argc, const char * argv[])
 	
 	string json;
 	
-	json += "{\n\"clusters\":[";
+	json += "{\n  \"clusters\":[";
 	int cluster_count = 0;
 	
 	// 1. Sort edges in entire graph by maximum edge weight
@@ -386,7 +386,7 @@ int main (int argc, const char * argv[])
 		{
 				json += ",";
 		}
-		json += "\n[";
+		json += "\n    [";
 		
 		int c = 0;
 		list<node>::iterator lit = cluster.begin();
@@ -439,12 +439,12 @@ int main (int argc, const char * argv[])
 	{
 		if (!InSkipList(v))
 		{
-			json += ",[ \"" + G.get_node_label(v) += "\" ]";
+			json += ",\n    [ \"" + G.get_node_label(v) += "\" ]";
 		}
 	}
 	
 	
-	json += "]\n}";
+	json += "\n  ]\n}\n";
 	
 	cout << json;
 	
