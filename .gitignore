@@ -33,3 +33,6 @@ Makefile.in
 /install-sh
 /missing
 
+.DS_Store
+configure.ac~
+configure~
